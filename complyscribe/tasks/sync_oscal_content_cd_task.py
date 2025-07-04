@@ -187,6 +187,7 @@ class SyncOscalCdTask(TaskBase):
         self.catalog_helper: CatalogControlResolver = CatalogControlResolver()
         self.all_rule_ids_from_cac: List[str] = list()
         self.rule_ids_from_oscal: Set[str] = set()
+        self.unselected_rules: List[str] = []
 
     @staticmethod
     def get_oscal_component_rule_ids(
@@ -364,6 +365,10 @@ class SyncOscalCdTask(TaskBase):
         ]
         # remove rule
         for rule in set(cac_rule_list).difference(set(oscal_control_rules)):
+            # not remove unselected rules
+            if rule in self.unselected_rules:
+                continue
+
             rule_list.remove(rule)
             logger.info(f"Remove rule {rule} from control: {cac_control['id']}")
 
@@ -388,6 +393,10 @@ class SyncOscalCdTask(TaskBase):
 
         # handle missing rule
         self._update_missing_rule_in_memory(cac_control, missing_rules)
+
+        # remove unnecessary rules field
+        if not cac_control["rules"] and not missing_rules:
+            del cac_control["rules"]
 
         # handle status change
         self._update_status(cac_control, oscal_control)
@@ -418,7 +427,7 @@ class SyncOscalCdTask(TaskBase):
                 selections[rule_index] = update_variable if update_variable else rule
             else:
                 # rule
-                if rule not in self.rule_ids_from_oscal:
+                if ("!" not in rule) and (rule not in self.rule_ids_from_oscal):
                     removed_rules.append(rule)
 
         # remove variables
@@ -569,6 +578,9 @@ class SyncOscalCdTask(TaskBase):
                     logger.info(f"profile {profile_id} variables: {profile.variables}")
                     profile_selection_obj = profile
                     break
+
+            # record unselected rules
+            self.unselected_rules = profile_selection_obj.unselected_rules
 
             oscal_parameters = control_implementation.set_parameters
             diff = ParameterDiffInfo(

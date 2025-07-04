@@ -88,7 +88,10 @@ def write_cac_yaml_ordered(file_path: pathlib.Path, data: Any) -> None:
     Serializes a Python object into a CaC content YAML stream, preserving the order.
     """
     yaml = YAML()
+    # align with CaC content yaml file style
     yaml.indent(mapping=4, sequence=6, offset=4)
+    yaml.explicit_start = True
+    yaml.width = 99
     yaml.dump(data, file_path)
 
 
