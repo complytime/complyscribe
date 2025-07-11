@@ -28,6 +28,8 @@ from trestle.tasks.csv_to_oscal_cd import (
     _RuleSetIdMgr,
 )
 
+from complyscribe import const
+
 
 logger = logging.getLogger(__name__)
 
@@ -108,12 +110,15 @@ def add_prop(name: str, value: str, remarks: Optional[str] = None) -> Property:
     return prop
 
 
-def get_benchmark_root(root: str, product: str) -> str:
+def get_benchmark_root(root: str, product: str) -> List[Any]:
     """Get the benchmark root."""
     product_yml_path = product_yaml_path(root, product)
     product_yaml = load_product_yaml(product_yml_path)
     product_dir = product_yaml.get("product_dir")
-    benchmark_root = os.path.join(product_dir, product_yaml.get("benchmark_root"))
+    benchmark_root = []
+    benchmark_root.append(os.path.join(product_dir, product_yaml.get("benchmark_root")))
+    if product == "ocp4":
+        benchmark_root.append(os.path.join(product_dir, const.SAME_GUIDE_DIRECTORY))
     return benchmark_root
 
 
@@ -215,9 +220,10 @@ class RulesTransformer:
 
         benchmark_root = get_benchmark_root(root, self.product)
         self.rules_dirs_for_product: Dict[str, str] = {}
-        for dir_path in find_rule_dirs_in_paths([benchmark_root]):
-            rule_id = get_rule_dir_id(dir_path)
-            self.rules_dirs_for_product[rule_id] = dir_path
+        for item in benchmark_root:
+            for dir_path in find_rule_dirs_in_paths([item]):
+                rule_id = get_rule_dir_id(dir_path)
+                self.rules_dirs_for_product[rule_id] = dir_path
 
         self._rules_by_id: Dict[str, RuleInfo] = {}
         self.profile_id = os.path.basename(profile).split(".profile")[0]

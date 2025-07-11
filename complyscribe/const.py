@@ -63,3 +63,6 @@ COMPLYSCRIBE_KEEP_FILE = ".keep"
 # by the profile or catalog "name" based on trestle workspace
 # conventions.
 FRAMEWORK_SHORT_NAME = "Framework_Short_Name"
+
+# rule yml directory
+SAME_GUIDE_DIRECTORY = "../../linux_os/guide"
