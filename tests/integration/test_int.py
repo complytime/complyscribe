@@ -2,7 +2,7 @@
 # Copyright (c) 2025 Red Hat, Inc.
 
 """
-Integration tests for validating that complyscribe output is consumable by complytime
+Integration tests for validating that complyscribe output is consumable by complyctl
 """
 import json
 import logging
@@ -28,16 +28,16 @@ logger.setLevel(logging.INFO)
 
 test_content_dir = TEST_DATA_DIR / "content_dir"
 
-# Ask complytime to use home directory instead of hardcoded system paths
-os.putenv("COMPLYTIME_DEV_MODE", "1")
+# Ask complyctl to use home directory instead of hardcoded system paths
+os.putenv("COMPLYCTL_DEV_MODE", "1")
 
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_complytime_setup() -> None:
-    """Ensure that the complytime integration test setup works"""
+def test_complyctl_setup() -> None:
+    """Ensure that the complyctl integration test setup works"""
     result = subprocess.run(
-        ["complytime", "list", "--plain"],
+        ["complyctl", "list", "--plain"],
         capture_output=True,
     )
     assert result.returncode == 0
@@ -51,7 +51,7 @@ def test_complytime_setup() -> None:
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_full_sync(tmp_repo: Tuple[str, Repo], complytime_home: pathlib.Path) -> None:
+def test_full_sync(tmp_repo: Tuple[str, Repo], complyctl_home: pathlib.Path) -> None:
     repo_dir, _ = tmp_repo
     repo_path = pathlib.Path(repo_dir)
     setup_for_catalog(repo_path, "simplified_nist_catalog", "catalog")
@@ -142,7 +142,7 @@ def test_full_sync(tmp_repo: Tuple[str, Repo], complytime_home: pathlib.Path) ->
     )
     new_prof_json_text = new_prof_json_text.replace(
         '"param_id"', '"param-id"'
-    )  # TODO compliance-trestle uses param_id and param-id interchangably, complytime requires param-id
+    )  # TODO compliance-trestle uses param_id and param-id interchangably, complyctl requires param-id
     new_prof_json = json.loads(new_prof_json_text)
 
     new_cd_json_text = component_definition.read_text()
@@ -153,21 +153,21 @@ def test_full_sync(tmp_repo: Tuple[str, Repo], complytime_home: pathlib.Path) ->
     new_cd_json = json.loads(new_cd_json_text)
 
     with open(
-        (complytime_home / ".local/share/complytime/controls/catalog.json"), "w"
+        (complyctl_home / ".local/share/complytime/controls/catalog.json"), "w"
     ) as file:
         json.dump(new_cat_json, file)
     with open(
-        (complytime_home / ".local/share/complytime/controls/profile.json"), "w"
+        (complyctl_home / ".local/share/complytime/controls/profile.json"), "w"
     ) as file:
         json.dump(new_prof_json, file)
     with open(
-        (complytime_home / ".local/share/complytime/bundles/component-definition.json"),
+        (complyctl_home / ".local/share/complytime/bundles/component-definition.json"),
         "w",
     ) as file:
         json.dump(new_cd_json, file)
 
     result = subprocess.run(
-        ["complytime", "list", "--plain"],
+        ["complyctl", "list", "--plain"],
         capture_output=True,
     )
     assert result.returncode == 0
@@ -182,7 +182,7 @@ def test_full_sync(tmp_repo: Tuple[str, Repo], complytime_home: pathlib.Path) ->
 @pytest.mark.slow
 @pytest.mark.integration
 def test_compdef_type_software_sync(
-    tmp_repo: Tuple[str, Repo], complytime_home: pathlib.Path
+    tmp_repo: Tuple[str, Repo], complyctl_home: pathlib.Path
 ) -> None:
     repo_dir, _ = tmp_repo
     repo_path = pathlib.Path(repo_dir)
@@ -278,7 +278,7 @@ def test_compdef_type_software_sync(
     )
     new_prof_json_text = new_prof_json_text.replace(
         '"param_id"', '"param-id"'
-    )  # TODO compliance-trestle uses param_id and param-id interchangably, complytime requires param-id
+    )  # TODO compliance-trestle uses param_id and param-id interchangably, complyctl requires param-id
     new_prof_json = json.loads(new_prof_json_text)
 
     new_cd_json_text = component_definition.read_text()
@@ -289,21 +289,21 @@ def test_compdef_type_software_sync(
     new_cd_json = json.loads(new_cd_json_text)
 
     with open(
-        (complytime_home / ".local/share/complytime/controls/catalog.json"), "w"
+        (complyctl_home / ".local/share/complytime/controls/catalog.json"), "w"
     ) as file:
         json.dump(new_cat_json, file)
     with open(
-        (complytime_home / ".local/share/complytime/controls/profile.json"), "w"
+        (complyctl_home / ".local/share/complytime/controls/profile.json"), "w"
     ) as file:
         json.dump(new_prof_json, file)
     with open(
-        (complytime_home / ".local/share/complytime/bundles/component-definition.json"),
+        (complyctl_home / ".local/share/complytime/bundles/component-definition.json"),
         "w",
     ) as file:
         json.dump(new_cd_json, file)
 
     result = subprocess.run(
-        ["complytime", "list", "--plain"],
+        ["complyctl", "list", "--plain"],
         capture_output=True,
     )
     assert result.returncode == 0
@@ -318,7 +318,7 @@ def test_compdef_type_software_sync(
 @pytest.mark.slow
 @pytest.mark.integration
 def test_compdef_type_validation_sync(
-    tmp_repo: Tuple[str, Repo], complytime_home: pathlib.Path
+    tmp_repo: Tuple[str, Repo], complyctl_home: pathlib.Path
 ) -> None:
     repo_dir, _ = tmp_repo
     repo_path = pathlib.Path(repo_dir)
@@ -414,7 +414,7 @@ def test_compdef_type_validation_sync(
     )
     new_prof_json_text = new_prof_json_text.replace(
         '"param_id"', '"param-id"'
-    )  # TODO compliance-trestle uses param_id and param-id interchangably, complytime requires param-id
+    )  # TODO compliance-trestle uses param_id and param-id interchangably, complyctl requires param-id
     new_prof_json = json.loads(new_prof_json_text)
 
     new_cd_json_text = component_definition.read_text()
@@ -425,21 +425,21 @@ def test_compdef_type_validation_sync(
     new_cd_json = json.loads(new_cd_json_text)
 
     with open(
-        (complytime_home / ".local/share/complytime/controls/catalog.json"), "w"
+        (complyctl_home / ".local/share/complytime/controls/catalog.json"), "w"
     ) as file:
         json.dump(new_cat_json, file)
     with open(
-        (complytime_home / ".local/share/complytime/controls/profile.json"), "w"
+        (complyctl_home / ".local/share/complytime/controls/profile.json"), "w"
     ) as file:
         json.dump(new_prof_json, file)
     with open(
-        (complytime_home / ".local/share/complytime/bundles/component-definition.json"),
+        (complyctl_home / ".local/share/complytime/bundles/component-definition.json"),
         "w",
     ) as file:
         json.dump(new_cd_json, file)
 
     result = subprocess.run(
-        ["complytime", "list", "--plain"],
+        ["complyctl", "list", "--plain"],
         capture_output=True,
     )
     assert result.returncode == 0
