@@ -1,1 +1,1 @@
-{!TROUBLESHOOTING.md!}
+Check [TROUBLESHOOTING.md](https://github.com/complytime/complyscribe/blob/main/TROUBLESHOOTING.md) 

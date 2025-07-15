@@ -52,7 +52,7 @@ When submitting a pull request, please follow these guidelines:
 
 ### Prerequisites
 
-- [Python](https://www.python.org/downloads/) - v3.8+
+- [Python](https://www.python.org/downloads/) - v3.9+
 - [Poetry](https://python-poetry.org/)
 - [Podman](https://podman.io/docs/installation) (Optional) - For testing locally and end-to-end tests
 
