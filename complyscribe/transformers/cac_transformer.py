@@ -242,8 +242,9 @@ class RulesTransformer:
             selected_value = param_data[self.product][self.profile_id]
             param_obj.set_selected_value(selected_value)
             options = get_variable_options(root, param_id)
-            param_obj.set_options(options)
-            rule_obj.add_parameter(param_obj)
+            if options:
+                param_obj.set_options(options)
+                rule_obj.add_parameter(param_obj)
 
     def add_rules(self, rules: List[str]) -> None:
         """
