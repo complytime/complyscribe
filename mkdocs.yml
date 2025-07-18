@@ -1,7 +1,7 @@
 site_name: complyscribe
 site_description: Documentation for complyscribe.
 repo_name: complyscribe 
-repo_url: https://github.com/RedHatProductSecurity/complyscribe/
+repo_url: https://github.com/complytime/complyscribe/
 
 theme:
   name: material
@@ -27,7 +27,6 @@ theme:
         name: Switch to light mode    
 
 markdown_extensions:
-  - markdown_include.include
   - md_in_html
   - toc:
       toc_depth: 2
@@ -40,6 +39,9 @@ markdown_extensions:
 copyright: |
   &copy; Copyright 2023 Red Hat, Inc.</a>
 
+plugins:
+  - include-markdown
+
 nav:
 - Overview: 
   - QuickStart: index.md
@@ -47,6 +49,9 @@ nav:
     - Diagrams: architecture/diagrams/c4.md
 - Tutorials:
   - GitHub: tutorials/github.md
+  - Authoring: tutorials/authoring.md
+  - Sync CaC to OSCAL: tutorials/sync-cac-content.md
+  - Sync OSCAL to CaC: tutorials/sync-oscal-content.md
 - Troubleshooting: troubleshooting.md
 - Contributing: contributing.md
 

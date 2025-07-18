@@ -43,8 +43,8 @@ safety = "^3.2.8"
 flake8-print = "^5.0.0"
 pre-commit = "^3.4.0"
 mkdocs-material = "^9.6.14"
-markdown-include = "^0.8.1"
 types-pyyaml = "^6.0.12.20240917"
+mkdocs-include-markdown-plugin = "^7.1.6"
 
 [tool.poetry.group.tests]
 optional = true
