@@ -51,7 +51,7 @@ optional = true
 
 [tool.poetry.group.tests.dependencies]
 pytest = "^8.3.5"
-pytest-cov = "^5.0.0"
+pytest-cov = "^6.2.1"
 pytest-skip-slow = "^0.0.5"
 responses = "^0.25.7"
 
