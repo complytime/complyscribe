@@ -28,7 +28,7 @@ compliance-trestle = "^3.9.1"
 github3-py = "^4.0.1"
 python-gitlab = "^4.2.0"
 ruamel-yaml = "^0.18.14"
-pydantic = "^2.0.0"
+pydantic = "^2.11.7"
 ssg = {git = "https://github.com/ComplianceasCode/content", rev='fcf8a7b21c47204f1212e4adb43f4301e27e36dc'}
 
 [tool.poetry.group.dev]
