@@ -42,7 +42,7 @@ isort = "^5.13.2"
 safety = "^3.2.8"
 flake8-print = "^5.0.0"
 pre-commit = "^4.3.0"
-mkdocs-material = "^9.6.16"
+mkdocs-material = "^9.6.18"
 types-pyyaml = "^6.0.12.20250809"
 mkdocs-include-markdown-plugin = "^7.1.6"
 
