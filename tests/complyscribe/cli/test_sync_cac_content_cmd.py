@@ -8,7 +8,6 @@ from typing import Any, Generator, Tuple
 from click import Command
 from click.testing import CliRunner
 from git import Repo
-from trestle.common.const import REPLACE_ME
 from trestle.oscal.catalog import Catalog, Control
 from trestle.oscal.component import ComponentDefinition
 
@@ -89,7 +88,7 @@ def test_sync_catalog_create(tmp_repo: Tuple[str, Repo]) -> None:
     catalog_obj = Catalog.oscal_read(catalog_path)
     assert catalog_obj.metadata.title == f"Catalog for {test_cac_control}"
     assert catalog_obj.metadata.oscal_version.__root__ == "1.1.3"
-    assert catalog_obj.metadata.version == "REPLACE_ME"
+    assert catalog_obj.metadata.version == "1.0"
     # (No top-level controls, all are in groups)
     assert sum([len(g.controls) for g in catalog_obj.groups]) == len(policy.controls)
 
@@ -137,7 +136,7 @@ def test_sync_catalog_create_real(tmp_repo: Tuple[str, Repo]) -> None:
 
     assert catalog_obj.metadata.title == f"Catalog for {ocp4_policy}"
     assert catalog_obj.metadata.oscal_version.__root__ == "1.1.3"
-    assert catalog_obj.metadata.version == "REPLACE_ME"
+    assert catalog_obj.metadata.version == "1.0"
 
     # (No top-level controls, all are in groups)
     def flatten_nested_controls(controls: Any) -> Generator[Control, None, None]:
@@ -191,7 +190,7 @@ def test_sync_catalog_update(tmp_repo: Tuple[str, Repo]) -> None:
         "Security and Privacy Controls for Federal Information Systems and Organizations"
     )
     assert merged_catalog.metadata.oscal_version.__root__ == "1.0.0"
-    assert merged_catalog.metadata.version == "5.0.1"
+    assert merged_catalog.metadata.version == "5.1"
     assert merged_catalog.groups[2].id == "au"
 
 
@@ -355,7 +354,7 @@ def test_sync_product(tmp_repo: Tuple[str, Repo]) -> None:
                 # Check mapping OscalStatus.ALTERNATIVE:CacStatus.MANUAL
                 if prop.name == "implementation-status":
                     assert prop.value == "alternative"
-                    assert prop.remarks == REPLACE_ME
+                    assert prop.remarks == "The description for control-id AC-2."
 
 
 def test_sync_product_create_validation_component(tmp_repo: Tuple[str, Repo]) -> None:

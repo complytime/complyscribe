@@ -140,6 +140,12 @@ class AuthoredProfile(AuthoredObjectBase):
 
             if not ModelUtils.models_are_equivalent(existing_profile, profile):
                 ModelUtils.update_last_modified(profile)
+                if profile.metadata.version == "REPLACE_ME":
+                    profile.metadata.version = "1.0"
+                else:
+                    profile.metadata.version = str(
+                        "{:.1f}".format(float(profile.metadata.version) + 0.1)
+                    )
                 profile.oscal_write(path=profile_path)
                 return True
         return False
@@ -190,6 +196,7 @@ class AuthoredProfile(AuthoredObjectBase):
                 )
 
         profile_data.metadata.title = profile_name
+        profile_data.metadata.version = "1.0"
         # Overwrite imports
         profile_import = gens.generate_sample_model(prof.Import)
         trestle_import_path = const.TRESTLE_HREF_HEADING + import_path

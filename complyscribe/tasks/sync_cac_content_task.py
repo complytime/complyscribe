@@ -263,8 +263,10 @@ class SyncCacContentTask(TaskBase):
             implemented_req: The implemented requirement to add the response and statements to.
             control_response: The control response to add to the implemented requirement.
         """
-        # REPLACE_ME is used as a generic string if no control notes
-        control_response = control.notes or REPLACE_ME
+        # Replace the placeholder "REPLACE_ME" to meaningful string
+        control_response = (
+            control.notes or f"The description for control-id {control.id}."
+        )
         pattern = re.compile(SECTION_PATTERN, re.IGNORECASE)
         sections_dict = self._build_sections_dict(control_response, pattern)
         oscal_status = OscalStatus.from_string(control.status)
@@ -352,6 +354,9 @@ class SyncCacContentTask(TaskBase):
         if control_id:
             implemented_req = generate_sample_model(ImplementedRequirement)
             implemented_req.control_id = control_id
+            implemented_req.description = (
+                f"The description for control-id {control_id}."
+            )
             self._handle_response(implemented_req, control)
             # Rules and variables are collected from rules section in control files, but for
             # product agnostic control files some rules are unselected or variables are overridden
@@ -375,6 +380,7 @@ class SyncCacContentTask(TaskBase):
     def _create_control_implementation(self) -> ControlImplementation:
         """Create control implementation for a component."""
         ci = generate_sample_model(ControlImplementation)
+        ci.description = f"Control implementation for {self.cac_profile_id}"
         ci.source = self.profile_href
         all_implement_reqs = list()
         self._get_controls()
