@@ -10,6 +10,7 @@ import logging
 import os
 import pathlib
 import re
+from copy import deepcopy
 from typing import List, Optional
 
 import ssg
@@ -71,6 +72,8 @@ def control_cac_to_oscal(
         cac_control.id, cac_control.title, parent.title if parent else None
     )
     oscal_control.title = oscal_title
+    if oscal_title == "REPLACE_ME":
+        oscal_title == f"Title for id {cac_control.id}"
     oscal_control.props = []
     oscal_control.params = []
     oscal_control.parts = []
@@ -202,6 +205,7 @@ class SyncCacCatalogTask(TaskBase):
             if not group:
                 group = generate_sample_model(Group)
                 group.id = group_id
+                group.title = f"Title for {group_id}"
                 oscal_catalog.groups.append(group)
             if not group.controls:
                 group.controls = []
@@ -218,6 +222,7 @@ class SyncCacCatalogTask(TaskBase):
                             if not control.controls:
                                 control.controls = []
                             parent = control
+                            parent.title = f"Title for {parent.id}"
                             found = True
                             break
                     if not found:
@@ -225,6 +230,7 @@ class SyncCacCatalogTask(TaskBase):
                         control = generate_sample_model(Control)
                         control.controls = []
                         control.id = parent_id
+                        control.title = f"Title for {control.id}"
                         parent.controls.append(control)
                         parent = control
             # 4. Find the associated oscal control to the cac control
@@ -237,6 +243,7 @@ class SyncCacCatalogTask(TaskBase):
             for control in parent.controls:
                 if control.id == new_control.id:
                     matched_control = control
+                    matched_control.title = f"Title for {matched_control.id}"
                     break
             # 4c. Merge mapped cac control into oscal control
             # (note: CatalogAPI.merge_catalog doesn't work for this)
@@ -284,9 +291,11 @@ class SyncCacCatalogTask(TaskBase):
                 "get_model_path_for_name_and_class()"
                 "was expected to return a Catalog, but the API changed."
             )
+
         if oscal_json.exists():
             logger.info(f"The catalog for {self.policy_id} exists.")
             oscal_catalog = Catalog.oscal_read(oscal_json)
+            existing_catalog = deepcopy(oscal_catalog)
         else:
             logger.info(f"Creating catalog {self.policy_id}")
             oscal_catalog = generate_sample_model(Catalog)
@@ -296,7 +305,7 @@ class SyncCacCatalogTask(TaskBase):
             # oscal_catalog.back_matter = None
 
         self._sync_catalog(oscal_catalog, policy)
-
+        oscal_catalog.metadata.version = "1.0"
         # Ensure any empty values are set to None as these
         # lists cannot be empty
         oscal_catalog.params = none_if_empty(oscal_catalog.params)
@@ -304,8 +313,17 @@ class SyncCacCatalogTask(TaskBase):
 
         catalog_dir = pathlib.Path(os.path.dirname(oscal_json))
         catalog_dir.mkdir(exist_ok=True, parents=True)
+        if oscal_json.exists():
+            if not ModelUtils.models_are_equivalent(
+                existing_catalog.groups, oscal_catalog.groups
+            ):
+                if existing_catalog.metadata.version == "REPLACE_ME":
+                    existing_catalog.metadata.version = "1.0"
+                else:
+                    oscal_catalog.metadata.version = str(
+                        "{:.1f}".format(float(existing_catalog.metadata.version) + 0.1)
+                    )
         oscal_catalog.oscal_write(oscal_json)
-
         logger.info("CaC catalog sync complete.")
 
     def execute(self) -> int:
