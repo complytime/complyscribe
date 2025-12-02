@@ -1,0 +1,62 @@
+name: Gemini AI Code Review
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  review:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # Required to post comments
+
+    steps:
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      # 1. Install Node.js
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+
+      # 2. Install Gemini CLI
+      - name: Install Gemini CLI
+        run: npm install -g @google/gemini-cli
+
+      # 3. Authenticate to Google Cloud (The Safe Way)
+      - id: 'auth'
+        name: 'Authenticate to GCP'
+        uses: 'google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093' # v3.0.0
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      # 4. Generate GitHub app token
+      - name: Generate GitHub App Token
+        id: app-token
+        if: ${{ vars.APP_ID }}
+        uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94 # v2.2.0
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      # 5. Run the Review
+      - name: Gemini Code Review
+        env:
+          # auth step automatically sets GOOGLE_APPLICATION_CREDENTIALS
+          GOOGLE_CLOUD_PROJECT: "complytime-test"
+          GOOGLE_CLOUD_LOCATION: "us-central1"
+          GOOGLE_GENAI_USE_VERTEXAI: "true"
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh pr diff ${{ github.event.pull_request.number }} > pr_diff.txt
+          
+          # Check if diff is too big, otherwise review it.
+          # The reason is that it revents the automation from wasting money for Service Account or
+          # crashing when you accidentally commit a massive file.
+          if [ "$(wc -c < pr_diff.txt)" -gt 40000 ]; then
+            echo "Diff is too large for a full review." > review.md
+          else
+            echo "## Gemini Code Review" > review.md
+            cat pr_diff.txt | gemini "Act as a senior software engineer. Review this pull request diff. Identify critical issues, suggest improvements, and summarize changes." >> review.md
+          fi
+          
+          # Post the comment
+          gh pr comment ${{ github.event.pull_request.number }} -F review.md
