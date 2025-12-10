@@ -622,21 +622,21 @@ markers = {main = "platform_system == \"Windows\"", plugins = "platform_system =
 
 [[package]]
 name = "compliance-trestle"
-version = "3.9.3"
+version = "3.10.4"
 description = "Tools to manage & autogenerate python objects representing the OSCAL layers/models"
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "plugins"]
 files = [
-    {file = "compliance_trestle-3.9.3-py2.py3-none-any.whl", hash = "sha256:a7e0b41f1c18cdf67d2f526f142768755b047dd7518ce6f04b68745e19e67c96"},
-    {file = "compliance_trestle-3.9.3.tar.gz", hash = "sha256:6d87a9c745fb0e745bf39d37fe93a6a4100fecf378f434350f54a56e63b3ca9d"},
+    {file = "compliance_trestle-3.10.4-py2.py3-none-any.whl", hash = "sha256:50857dd4d69cde45b3f6a33b1f117f862c5eb15a903df2de4d4b8be0bc5dfc3d"},
+    {file = "compliance_trestle-3.10.4.tar.gz", hash = "sha256:2e95bcb72aec63d23ac946904f5de47c7df9a02502603780ac5f54b2ae284fa6"},
 ]
 
 [package.dependencies]
 attrs = "*"
-cmarkgfm = ">=2024.1,<2024.12"
+cmarkgfm = ">=2024.1,<2025.11"
 cryptography = "45.0.7"
-datamodel-code-generator = {version = "0.35.0", extras = ["http"]}
+datamodel-code-generator = {version = "0.36.0", extras = ["http"]}
 defusedxml = "*"
 furl = "*"
 ilcli = "*"
@@ -857,14 +857,14 @@ test-randomorder = ["pytest-randomly"]
 
 [[package]]
 name = "datamodel-code-generator"
-version = "0.35.0"
+version = "0.36.0"
 description = "Datamodel Code Generator"
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "plugins"]
 files = [
-    {file = "datamodel_code_generator-0.35.0-py3-none-any.whl", hash = "sha256:c356d1e4a555f86667a4262db03d4598a30caeda8f51786555fd269c8abb806b"},
-    {file = "datamodel_code_generator-0.35.0.tar.gz", hash = "sha256:46805fa2515d3871f6bfafce9aa63128e735a7a6a4cfcbf9c27b3794ee4ea846"},
+    {file = "datamodel_code_generator-0.36.0-py3-none-any.whl", hash = "sha256:7d9b11cbf309b65cc9d13560ee22a75feb8d7e63ed8e305fe58dee6150eb6f5b"},
+    {file = "datamodel_code_generator-0.36.0.tar.gz", hash = "sha256:1a70d0fa7648551d48b800dbe9b249582b9362eac084f01a643534338ccc3fdf"},
 ]
 
 [package.dependencies]
@@ -873,7 +873,7 @@ black = ">=19.10b0"
 genson = ">=1.2.1,<2"
 httpx = {version = ">=0.24.1", optional = true, markers = "extra == \"http\""}
 inflect = ">=4.1,<8"
-isort = ">=4.3.21,<7"
+isort = ">=4.3.21,<8"
 jinja2 = ">=2.10.1,<4"
 packaging = "*"
 pydantic = ">=1.5"
@@ -881,12 +881,12 @@ pyyaml = ">=6.0.1"
 tomli = {version = ">=2.2.1,<3", markers = "python_version <= \"3.11\""}
 
 [package.extras]
-all = ["graphql-core (>=3.2.3)", "httpx (>=0.24.1)", "openapi-spec-validator (>=0.2.8,<0.7)", "prance (>=0.18.2)", "pysnooper (>=0.4.1,<2)", "ruff (>=0.9.10)"]
+all = ["graphql-core (>=3.2.3)", "httpx (>=0.24.1)", "openapi-spec-validator (>=0.2.8,<0.8)", "prance (>=0.18.2)", "pysnooper (>=0.4.1,<2)", "ruff (>=0.9.10)"]
 debug = ["pysnooper (>=0.4.1,<2)"]
 graphql = ["graphql-core (>=3.2.3)"]
 http = ["httpx (>=0.24.1)"]
 ruff = ["ruff (>=0.9.10)"]
-validation = ["openapi-spec-validator (>=0.2.8,<0.7)", "prance (>=0.18.2)"]
+validation = ["openapi-spec-validator (>=0.2.8,<0.8)", "prance (>=0.18.2)"]
 
 [[package]]
 name = "defusedxml"
@@ -3416,4 +3416,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9.2"
-content-hash = "9e7f4832542590970de3c08b252b0b23f14fad1424f91267aa17875d80e2a1db"
+content-hash = "de8b7853fc223f5594f2f4d451a895c72ae23d1755ca0ae8e2bae5a0400e85de"
