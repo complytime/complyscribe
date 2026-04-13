@@ -46,7 +46,7 @@ runs:
           latest=false
 
     - name: Build and export to Docker
-      uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # pin@v5
+      uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # pin@v5
       id: build-and-export
       with:
         context: "."
@@ -75,7 +75,7 @@ runs:
 
     # Does not rebuild. Uses internal cache from previous step.
     - name: Build and Push
-      uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # pin@v5
+      uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # pin@v5
       id: build-and-push
       with:
         context: "."
