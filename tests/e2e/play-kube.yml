@@ -6,11 +6,15 @@ metadata:
   labels:
     app: complyscribe-e2e
 spec:
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
   containers:
     - name: mock-server-container
       image: localhost/mock-server:latest
       securityContext:
         allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
         capabilities:
           drop:
             - ALL
@@ -18,3 +22,9 @@ spec:
             - NET_BIND_SERVICE
       ports:
         - containerPort: 8080
+      volumeMounts:
+        - name: tmp
+          mountPath: /home/wiremock
+  volumes:
+    - name: tmp
+      emptyDir: {}

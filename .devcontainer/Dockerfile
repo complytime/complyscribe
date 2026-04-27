@@ -3,12 +3,13 @@ FROM quay.io/fedora/fedora:37
 ARG POETRY_VERSION=1.7.1
 
 RUN dnf -y update && \
-    yum -y reinstall shadow-utils && \
-    yum install -y git \
+    dnf -y reinstall shadow-utils && \
+    dnf install -y git \
                    python3 \
                    python3-pip \
                    python3-devel \
                    gcc-c++ && \
+    dnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
 RUN useradd -u 1000 complyscribe

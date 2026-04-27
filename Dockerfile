@@ -67,5 +67,7 @@ COPY ./actions/sync-upstreams/sync-upstreams-entrypoint.sh /
 
 RUN chmod +x /auto-sync-entrypoint.sh /rules-transform-entrypoint.sh /create-cd-entrypoint.sh /sync-upstreams-entrypoint.sh
 
+USER 1001
+
 ENTRYPOINT ["python3.9", "-m" , "complyscribe"]
 CMD ["--help"]
