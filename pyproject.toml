@@ -5,7 +5,7 @@ build-backend = 'poetry.core.masonry.api'
 
 [tool.poetry]
 name = 'complyscribe'
-version = "0.14.0"
+version = "0.15.0"
 description = "complyscribe assists users in leveraging Compliance-Trestle in automated workflows of for OSCAL formatted compliance content management."
 
 authors = ["Jennifer Power <jpower@redhat.com>",]
